@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Unit Converter</title>
+  <style>
+    body {
+        font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+        background-color: #f0f2f5;
+    }
+
+    .converter-container {
+        width: 400px;
+        margin: 50px auto;
+        padding: 25px;
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .converter-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .tab-buttons {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ccc;
+    }
+
+    .tab-buttons form {
+        margin: 0;
+    }
+
+    .tab-buttons button {
+        background-color: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        padding: 10px 15px;
+        font-weight: bold;
+        color: #333;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .tab-buttons button:hover,
+    .tab-buttons button:focus {
+        border-bottom: 3px solid #007bff;
+        color: #007bff;
+        outline: none;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    label {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    select, input {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    .submit-button {
+        margin-top: 15px;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="converter-container">
+  <h2>Unit Converter</h2>
+
+  <!-- Tabs -->
+  <div class="tab-buttons">
+    <form th:action="@{/convert}" method="get">
+      <input type="hidden" name="tab" value="length"/>
+      <button type="submit" th:classappend="${selectedTab == 'length'} ? 'active' : ''">Length</button>
+    </form>
+    <form th:action="@{/convert}" method="get">
+      <input type="hidden" name="tab" value="weight"/>
+      <button type="submit" th:classappend="${selectedTab == 'weight'} ? 'active' : ''">Weight</button>
+    </form>
+    <form th:action="@{/convert}" method="get">
+      <input type="hidden" name="tab" value="temperature"/>
+      <button type="submit" th:classappend="${selectedTab == 'temperature'} ? 'active' : ''">Temperature</button>
+    </form>
+  </div>
+
+  <!-- Converter Form -->
+  <form th:action="@{/convert}" method="post">
+    <input type="hidden" name="category" th:value="${selectedTab}" />
+
+    <div class="form-group">
+      <label for="fromUnit">From Unit</label>
+      <select name="fromUnit" id="fromUnit">
+        <option th:each="u : ${lengthUnits}" th:text="${u}" th:value="${u}" th:selected="${u == selectedFromUnit}" th:if="${selectedTab == 'length'}"></option>
+        <option th:each="u : ${weightUnits}" th:text="${u}" th:value="${u}" th:selected="${u == selectedFromUnit}" th:if="${selectedTab == 'weight'}"></option>
+        <option th:each="u : ${temperatureUnits}" th:text="${u}" th:value="${u}" th:selected="${u == selectedFromUnit}" th:if="${selectedTab == 'temperature'}"></option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="toUnit">To Unit</label>
+      <select name="toUnit" id="toUnit">
+        <option th:each="u : ${lengthUnits}" th:text="${u}" th:value="${u}" th:selected="${u == selectedToUnit}" th:if="${selectedTab == 'length'}"></option>
+        <option th:each="u : ${weightUnits}" th:text="${u}" th:value="${u}" th:selected="${u == selectedToUnit}" th:if="${selectedTab == 'weight'}"></option>
+        <option th:each="u : ${temperatureUnits}" th:text="${u}" th:value="${u}" th:selected="${u == selectedToUnit}" th:if="${selectedTab == 'temperature'}"></option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="inputValue">Enter Value</label>
+      <input type="number" name="value" id="inputValue" th:value="${inputValue}" required />
+    </div>
+
+    <div class="form-group">
+      <label for="result">Converted Result</label>
+      <input type="text" id="result" name="result" th:value="${result}" readonly />
+    </div>
+
+    <button type="submit" class="submit-button">Convert</button>
+  </form>
+</div>
+</body>
+</html>
