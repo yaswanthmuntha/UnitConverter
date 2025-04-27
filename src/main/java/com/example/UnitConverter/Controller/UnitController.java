@@ -35,6 +35,8 @@ public class UnitController {
         return "index"; // name of the Thymeleaf file: index.html
     }
 
+    // added a comment
+
     @PostMapping("/convert")
     public String getValues(
             @RequestParam String category,
